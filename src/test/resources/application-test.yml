@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:moviesdb
+    driver-class-name: org.h2.Driver
+    username: postgres
+    password: pass
+  liquibase:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
