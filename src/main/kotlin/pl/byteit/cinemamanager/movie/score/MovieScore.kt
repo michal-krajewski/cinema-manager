@@ -8,10 +8,12 @@ import java.util.*
 @Table(name = "movie_scores")
 @IdClass(MovieScoreId::class)
 class MovieScore(
-    @Id var userId: UUID,
-    @Id var movieId: UUID,
-    var score: Int
+    @Id val userId: UUID,
+    @Id val movieId: UUID,
+    score: Int
 ) {
+    final var score: Int = score
+        private set
 
     fun update(score: Int): MovieScore {
         this.score = score
