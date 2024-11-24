@@ -27,12 +27,12 @@ class DatabaseCleaner: TestExecutionListener {
         }
     }
 
-    fun jdbcTemplate(applicationContext: ApplicationContext): JdbcTemplate {
+    private fun jdbcTemplate(applicationContext: ApplicationContext): JdbcTemplate {
         val dataSource = applicationContext.getBean(DataSource::class.java)
         return JdbcTemplate(dataSource)
     }
 
-    fun transactionTemplate(applicationContext: ApplicationContext): TransactionTemplate {
+    private fun transactionTemplate(applicationContext: ApplicationContext): TransactionTemplate {
         val txMgr = applicationContext.getBean(PlatformTransactionManager::class.java)
         return TransactionTemplate(txMgr)
     }

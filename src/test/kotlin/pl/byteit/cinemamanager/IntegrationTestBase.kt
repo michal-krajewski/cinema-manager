@@ -28,7 +28,7 @@ abstract class IntegrationTestBase {
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
-    fun client(): RestTemplate {
+    protected fun client(): RestTemplate {
         val restTemplate = RestTemplateBuilder()
             .errorHandler(RestTemplateErrorHandler())
             .rootUri("http://localhost:${environment.getProperty("local.server.port")}")
