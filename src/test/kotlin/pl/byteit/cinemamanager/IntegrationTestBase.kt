@@ -9,9 +9,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestExecutionListeners
 import org.springframework.web.client.RestTemplate
-import pl.byteit.cinemamanager.http.ApplicationClient
-import pl.byteit.cinemamanager.http.RestTemplateErrorHandler
-import pl.byteit.cinemamanager.http.RestTemplateHttpClient
+import pl.byteit.cinemamanager.http.*
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -27,9 +25,12 @@ abstract class IntegrationTestBase {
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
-    protected fun client(): ApplicationClient = ApplicationClient(RestTemplateHttpClient(httpClient()))
+    protected fun login(user: TestUser): ApplicationClient  {
+        val client: HttpClient = UserAwareHttpClient(user.id, RestTemplateHttpClient(restTemplate()))
+        return ApplicationClient(client)
+    }
 
-    protected fun httpClient(): RestTemplate {
+    private fun restTemplate(): RestTemplate {
         val restTemplate = RestTemplateBuilder()
             .errorHandler(RestTemplateErrorHandler())
             .rootUri("http://localhost:${environment.getProperty("local.server.port")}")

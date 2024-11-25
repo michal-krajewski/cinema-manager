@@ -20,5 +20,5 @@ class ApplicationClient(private val httpClient: HttpClient) {
     }
 
     fun getUserScore(movieId: UUID): UserMovieScore =
-        httpClient.get("/users/$movieId/score", object : ParameterizedTypeReference<UserMovieScore>() {})
+        httpClient.get("/movies/$movieId/score", object : ParameterizedTypeReference<UserMovieScore>() {})
 }

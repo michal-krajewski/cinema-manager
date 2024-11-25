@@ -1,10 +1,13 @@
 package pl.byteit.cinemamanager.user
 
+import org.springframework.web.context.request.RequestAttributes
+import org.springframework.web.context.request.RequestContextHolder
 import java.util.*
 
 
 interface UserContext {
     fun currentUserId() : UUID {
-        return UUID.randomUUID() //TODO: return user id from user context
+        val id = RequestContextHolder.currentRequestAttributes().getAttribute("UserId", RequestAttributes.SCOPE_REQUEST) as String
+        return UUID.fromString(id)
     }
 }

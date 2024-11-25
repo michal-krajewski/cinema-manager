@@ -2,11 +2,13 @@ package pl.byteit.cinemamanager.http
 
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpMethod.GET
 import org.springframework.http.HttpMethod.PUT
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.RestTemplate
+import java.util.UUID
 
 interface HttpClient {
 
@@ -18,9 +20,25 @@ interface HttpClient {
         endpoint: String,
         method: HttpMethod,
         parameterizedTypeReference: ParameterizedTypeReference<T>,
-        body: Any?
+        body: Any?,
+        headers: HttpHeaders? = null
     ): ResponseEntity<T>
 
+}
+
+class UserAwareHttpClient(private val userId: UUID, private val client: HttpClient) : HttpClient {
+    override fun <T> exchange(
+        endpoint: String,
+        method: HttpMethod,
+        parameterizedTypeReference: ParameterizedTypeReference<T>,
+        body: Any?,
+        headers: HttpHeaders?
+    ): ResponseEntity<T> {
+        val initializedHeaders = headers ?: HttpHeaders()
+        initializedHeaders["User-Id"] = listOf(userId.toString())
+
+        return client.exchange(endpoint, method, parameterizedTypeReference, body, initializedHeaders)
+    }
 }
 
 class RestTemplateHttpClient(private val restTemplate: RestTemplate) : HttpClient {
@@ -29,12 +47,13 @@ class RestTemplateHttpClient(private val restTemplate: RestTemplate) : HttpClien
         endpoint: String,
         method: HttpMethod,
         parameterizedTypeReference: ParameterizedTypeReference<T>,
-        body: Any?
+        body: Any?,
+        headers: HttpHeaders?
     ): ResponseEntity<T> {
         return restTemplate.exchange(
             endpoint,
             method,
-            HttpEntity<Any>(body, null),
+            HttpEntity<Any>(body, headers),
             parameterizedTypeReference
         )
     }

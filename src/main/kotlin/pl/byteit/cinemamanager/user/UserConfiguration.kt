@@ -11,4 +11,9 @@ class UserConfiguration {
         return object : UserContext {}
     }
 
+    @Bean
+    fun userInterceptor(): UserInterceptor {
+        return UserInterceptor()
+    }
+
 }

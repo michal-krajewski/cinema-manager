@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test
 import pl.byteit.cinemamanager.IntegrationTestBase
 import pl.byteit.cinemamanager.TestMovie.FAST_FIVE
 import pl.byteit.cinemamanager.TestMovie.FAST_SIX
+import pl.byteit.cinemamanager.TestUser
+import pl.byteit.cinemamanager.http.ApplicationClient
 import pl.byteit.cinemamanager.movie.io.ImdbDetailsDto
 import pl.byteit.cinemamanager.movie.io.MovieResponse
 import pl.byteit.cinemamanager.omdb.OmdbMockServer
@@ -33,15 +35,19 @@ class MovieApiTest : IntegrationTestBase() {
         }
     }
 
+    lateinit var asUser: ApplicationClient
+
     @BeforeEach
     fun setupMovieApiTest() {
         mockServer.mockMovieResponse(FAST_FIVE.imdbId)
         mockServer.mockMovieResponse(FAST_SIX.imdbId)
+
+        asUser = login(TestUser.USER_1)
     }
 
     @Test
     fun `Should return movies`() {
-        val response: List<MovieResponse> = client().getMovies().content
+        val response: List<MovieResponse> = asUser.getMovies().content
 
         assertThat(response)
             .hasSize(2)
@@ -54,7 +60,7 @@ class MovieApiTest : IntegrationTestBase() {
 
     @Test
     fun `Should return movie details from imdb`() {
-        val movieDetails = client().getMovieDetails(FAST_FIVE.id)
+        val movieDetails = asUser.getMovieDetails(FAST_FIVE.id)
 
         assertThat(movieDetails.details)
             .isEqualTo(
@@ -69,36 +75,33 @@ class MovieApiTest : IntegrationTestBase() {
 
     @Test
     fun `Should score movie`() {
-        val client = client()
+        asUser.addScore(FAST_FIVE.id, 2)
 
-        client.addScore(FAST_FIVE.id, 2)
-
-        val movieDetails = client.getMovieDetails(FAST_FIVE.id)
+        val movieDetails = asUser.getMovieDetails(FAST_FIVE.id)
         assertThat(movieDetails.score).isEqualTo(2.0)
     }
 
     @Test
     fun `Should return average users score for movie`() {
-        client().addScore(FAST_FIVE.id, 2)
-        client().addScore(FAST_FIVE.id, 3)
+        asUser.addScore(FAST_FIVE.id, 2)
+        login(TestUser.USER_2).addScore(FAST_FIVE.id, 3)
 
-        val movieDetails = client().getMovieDetails(FAST_FIVE.id)
+        val movieDetails = asUser.getMovieDetails(FAST_FIVE.id)
+
         assertThat(movieDetails.score).isEqualTo(2.5)
     }
 
     @Test
-    @Disabled("Should be enabled when user support is added")
     fun `Should update user score`() {
-        val client = client()
-        client.addScore(FAST_FIVE.id, 2)
-        val initialScore = client.getUserScore(FAST_FIVE.id)
+        asUser.addScore(FAST_FIVE.id, 2)
+        val initialScore = asUser.getUserScore(FAST_FIVE.id)
 
-        client.addScore(FAST_FIVE.id, 5)
+        asUser.addScore(FAST_FIVE.id, 5)
 
-        val movieDetails = client.getMovieDetails(FAST_FIVE.id)
+        val movieDetails = asUser.getMovieDetails(FAST_FIVE.id)
         assertThat(movieDetails.score)
             .isNotEqualTo(initialScore.score)
-            .isEqualTo(5)
+            .isEqualTo(5.0)
     }
 
 }
