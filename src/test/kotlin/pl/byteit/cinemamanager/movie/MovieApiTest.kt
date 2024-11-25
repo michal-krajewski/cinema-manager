@@ -27,7 +27,20 @@ class MovieApiTest : IntegrationTestBase() {
                 tuple(FAST_SIX.id, FAST_SIX.title),
             )
     }
-    
+
+    @Test
+    @Disabled //TODO
+    fun `Should return movie details from imdb`() {
+        val movieDetails = client().getMovieDetails(FAST_FIVE.id)
+
+        assertThat(movieDetails.details)
+            .isEqualTo(DetailsDto(
+                "143 min",
+                "25 Jun 2021",
+                "5.2",
+                "Dom and the crew must take on an international terrorist who turns out to be Dom and Mia's estranged brother."
+            ))
+    }
 
     @Test
     fun `Should score movie`() {
