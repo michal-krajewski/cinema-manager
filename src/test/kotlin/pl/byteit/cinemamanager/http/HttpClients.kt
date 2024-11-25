@@ -4,8 +4,7 @@ import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
-import org.springframework.http.HttpMethod.GET
-import org.springframework.http.HttpMethod.PUT
+import org.springframework.http.HttpMethod.*
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.RestTemplate
 import java.util.UUID
@@ -15,6 +14,8 @@ interface HttpClient {
     fun<T> get(url: String, type: ParameterizedTypeReference<T>): T = exchange(url, GET, type, null).body!!
 
     fun put(url: String, body: Any) = exchange(url, PUT, object: ParameterizedTypeReference<Unit>(){}, body)
+
+    fun delete(url: String) = exchange(url, DELETE, object: ParameterizedTypeReference<Unit>(){}, null)
 
     fun <T> exchange(
         endpoint: String,

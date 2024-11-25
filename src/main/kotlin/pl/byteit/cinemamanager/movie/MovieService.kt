@@ -45,4 +45,7 @@ class MovieService(
         movieScoreRepository.save(movieScore)
     }
 
+    fun exists(movieId: UUID): Boolean =
+        movieRepository.existsById(movieId)
+
 }

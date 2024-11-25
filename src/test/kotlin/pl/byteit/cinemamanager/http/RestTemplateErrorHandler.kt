@@ -12,10 +12,10 @@ class RestTemplateErrorHandler : ResponseErrorHandler {
 
     override fun handleError(response: ClientHttpResponse) {
         throw when (response.statusCode) {
-            HttpStatus.BAD_REQUEST -> BadRequestException(response.body.toString())
-            HttpStatus.UNAUTHORIZED -> UnauthorizedException(response.body.toString())
-            HttpStatus.FORBIDDEN -> ForbiddenException(response.body.toString())
-            HttpStatus.NOT_FOUND -> NotFoundException(response.body.toString())
+            HttpStatus.BAD_REQUEST -> BadRequestResponseException(response.body.toString())
+            HttpStatus.UNAUTHORIZED -> UnauthorizedResponseException(response.body.toString())
+            HttpStatus.FORBIDDEN -> ForbiddenResponseException(response.body.toString())
+            HttpStatus.NOT_FOUND -> NotFoundResponseException(response.body.toString())
             else -> UnhandledApplicationException("Status code ${response.statusCode} Body: ${response.body}")
         }
     }
