@@ -10,14 +10,11 @@ import java.util.*
 class MovieScore(
     @Id val userId: UUID,
     @Id val movieId: UUID,
-    score: Int
+    val score: Int
 ) {
-    final var score: Int = score
-        private set
 
     fun update(score: Int): MovieScore {
-        this.score = score
-        return this
+        return MovieScore(this.userId, this.movieId, score)
     }
 
 }
