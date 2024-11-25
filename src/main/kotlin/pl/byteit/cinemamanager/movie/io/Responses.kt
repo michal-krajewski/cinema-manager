@@ -3,6 +3,7 @@ package pl.byteit.cinemamanager.movie.io
 import pl.byteit.cinemamanager.movie.Movie
 import pl.byteit.cinemamanager.movie.MovieDetails
 import pl.byteit.cinemamanager.omdb.ImdbDetails
+import java.math.BigDecimal
 import java.util.*
 
 data class MovieResponse(
@@ -18,6 +19,7 @@ data class MovieDetailsResponse(
     val id: UUID,
     val title: String,
     val score: Double,
+    val ticketPrice: BigDecimal?,
     val details: ImdbDetailsDto?
 ) {
     companion object Factory {
@@ -25,6 +27,7 @@ data class MovieDetailsResponse(
             movie.id(),
             movie.title(),
             movie.score() ?: 0.0,
+            movie.ticketPrice(),
             ImdbDetailsDto.from(movie.imdbDetails)
         )
     }

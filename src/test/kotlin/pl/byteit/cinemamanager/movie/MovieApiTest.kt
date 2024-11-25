@@ -1,7 +1,6 @@
 package pl.byteit.cinemamanager.movie
 
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.tuple
+import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
@@ -11,10 +10,13 @@ import pl.byteit.cinemamanager.IntegrationTestBase
 import pl.byteit.cinemamanager.TestMovie.FAST_FIVE
 import pl.byteit.cinemamanager.TestMovie.FAST_SIX
 import pl.byteit.cinemamanager.TestUser
+import pl.byteit.cinemamanager.TestUser.ADMIN
 import pl.byteit.cinemamanager.http.ApplicationClient
+import pl.byteit.cinemamanager.http.ForbiddenResponseException
 import pl.byteit.cinemamanager.movie.io.ImdbDetailsDto
 import pl.byteit.cinemamanager.movie.io.MovieResponse
 import pl.byteit.cinemamanager.omdb.OmdbMockServer
+import java.math.BigDecimal
 
 class MovieApiTest : IntegrationTestBase() {
 
@@ -102,6 +104,44 @@ class MovieApiTest : IntegrationTestBase() {
         assertThat(movieDetails.score)
             .isNotEqualTo(initialScore.score)
             .isEqualTo(5.0)
+    }
+
+    @Test
+    fun `Should set ticket price`() {
+        val asAdmin = login(ADMIN)
+
+        asAdmin.setTicketPrice(FAST_FIVE.id, BigDecimal("10.99"))
+
+        val movieDetails = asUser.getMovieDetails(FAST_FIVE.id)
+        assertThat(movieDetails.ticketPrice)
+            .isEqualTo(BigDecimal("10.99"))
+    }
+
+    @Test
+    fun `Should change current ticket price`() {
+        val asAdmin = login(ADMIN)
+        asAdmin.setTicketPrice(FAST_FIVE.id, BigDecimal("10.99"))
+
+        asAdmin.setTicketPrice(FAST_FIVE.id, BigDecimal("19.99"))
+
+        val movieDetails = asUser.getMovieDetails(FAST_FIVE.id)
+        assertThat(movieDetails.ticketPrice)
+            .isEqualTo(BigDecimal("19.99"))
+    }
+
+    @Test
+    @Disabled("Security config needed")
+    fun `Should prevent user from setting ticket price`() {
+        assertThatThrownBy { asUser.setTicketPrice(FAST_FIVE.id, BigDecimal("19.99")) }
+            .isExactlyInstanceOf(ForbiddenResponseException::class.java)
+    }
+
+    @Test
+    fun `Should return null value when price is not defined`() {
+        val movieDetails = asUser.getMovieDetails(FAST_FIVE.id)
+
+        assertThat(movieDetails.ticketPrice)
+            .isNull()
     }
 
 }

@@ -3,6 +3,7 @@ package pl.byteit.cinemamanager.movie
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import java.math.BigDecimal
 import java.util.*
 
 @Entity
@@ -13,9 +14,10 @@ class Movie(
     val imdbId: String
 )
 
-interface MovieWithScore {
+interface MovieDetailsWithScore {
     fun getId(): UUID
     fun getTitle(): String
     fun getImdbId(): String
+    fun getTicketPrice(): BigDecimal?
     fun getScore(): Double?
 }

@@ -9,7 +9,7 @@ data class DateWithZone (
     val timeZone: ZoneId,
 ){
 
-    companion object {
+    companion object Factory {
         fun from(zonedDateTime: ZonedDateTime): DateWithZone {
             return DateWithZone(
                 zonedDateTime.toOffsetDateTime(),

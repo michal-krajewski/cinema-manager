@@ -3,10 +3,11 @@ package pl.byteit.cinemamanager.movie
 import pl.byteit.cinemamanager.omdb.ImdbDetails
 
 class MovieDetails(
-    private val movieWithScore: MovieWithScore,
+    private val movieDetailsWithScore: MovieDetailsWithScore,
     val imdbDetails: ImdbDetails?
 ) {
-    fun title() = movieWithScore.getTitle()
-    fun score() = movieWithScore.getScore()
-    fun id() = movieWithScore.getId()
+    fun title() = movieDetailsWithScore.getTitle()
+    fun score() = movieDetailsWithScore.getScore()
+    fun id() = movieDetailsWithScore.getId()
+    fun ticketPrice() = movieDetailsWithScore.getTicketPrice()
 }
