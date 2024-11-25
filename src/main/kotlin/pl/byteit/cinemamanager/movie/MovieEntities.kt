@@ -16,5 +16,6 @@ class Movie(
 interface MovieWithScore {
     fun getId(): UUID
     fun getTitle(): String
-    fun getScore(): Double
+    fun getImdbId(): String
+    fun getScore(): Double?
 }

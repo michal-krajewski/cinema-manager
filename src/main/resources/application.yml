@@ -1,3 +1,8 @@
 spring:
   application:
     name: CinemaManager
+
+omdb-api:
+  url: ${OMDB_API_URL}
+  key: ${OMDB_API_KEY}
+

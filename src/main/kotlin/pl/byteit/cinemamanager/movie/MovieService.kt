@@ -7,20 +7,26 @@ import pl.byteit.cinemamanager.common.ScoreNotFound
 import pl.byteit.cinemamanager.movie.score.MovieScore
 import pl.byteit.cinemamanager.movie.score.MovieScoreId
 import pl.byteit.cinemamanager.movie.score.MovieScoreRepository
+import pl.byteit.cinemamanager.omdb.ImdbDetails
+import pl.byteit.cinemamanager.omdb.OmdbClient
 import pl.byteit.cinemamanager.user.UserContext
 import java.util.UUID
 
 class MovieService(
     private val movieRepository: MovieRepository,
     private val movieScoreRepository: MovieScoreRepository,
-    private val userContext: UserContext
+    private val userContext: UserContext,
+    private val omdbClient: OmdbClient
     ) {
 
     fun getMovies(pageRequest: PageRequest): Page<Movie> =
         movieRepository.findAll(pageRequest)
 
-    fun getMovieDetails(movieId: UUID): MovieWithScore =
-        movieRepository.findWithScoreById(movieId) ?: throw MovieNotFoundException(movieId)
+    fun getMovieDetails(movieId: UUID): MovieDetails {
+        val movieWithScore = movieRepository.findWithScoreById(movieId) ?: throw MovieNotFoundException(movieId)
+        val imdbDetails = omdbClient.fetchMovieDetails(movieWithScore.getImdbId())
+        return MovieDetails(movieWithScore, imdbDetails)
+    }
 
     fun getUserScore(movieId: UUID): Int {
         return movieScoreRepository.findById(MovieScoreId(userContext.currentUserId(), movieId))

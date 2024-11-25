@@ -13,3 +13,7 @@ spring:
 #    properties:
 #      hibernate:
 #        format_sql: true
+
+omdb-api:
+  url: http://localhost:8585/
+  key: secret-test-key

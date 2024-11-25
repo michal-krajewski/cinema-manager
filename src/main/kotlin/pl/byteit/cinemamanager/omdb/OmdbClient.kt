@@ -12,14 +12,19 @@ class OmdbClient(
 ) {
     private val log = LoggerFactory.getLogger(OmdbClient::class.java)
 
-    fun fetchMovieDetails(omdbId: String): OmdbResponse? {
+    fun fetchMovieDetails(omdbId: String): ImdbDetails? {
         log.debug("Sending request to omdb API for movie: $omdbId")
         val response: OmdbResponse? = fetchRequest(omdbId)
-        if (response != null && response.isError()) {
-            log.error("Received error response from omdb: ${response.error}")
+        if (response == null || response.isError()) {
+            log.error("Received error response from omdb: ${response?.error}")
             return null
         }
-        return response
+        return ImdbDetails(
+            response.runtime,
+            response.releaseDate,
+            response.imdbRating,
+            response.plot
+        )
     }
 
     private fun fetchRequest(omdbId: String): OmdbResponse? {
@@ -32,6 +37,13 @@ class OmdbClient(
     }
 
 }
+
+data class ImdbDetails(
+    val runtime: String?,
+    val releasedDate: String?,
+    val imdbRating: String?,
+    val description: String?
+)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class OmdbResponse(

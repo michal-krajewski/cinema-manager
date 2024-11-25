@@ -9,7 +9,7 @@ import java.util.UUID
 interface MovieRepository: JpaRepository<Movie, UUID> {
 
     @Query("""
-        SELECT m.id AS id, m.title AS title, AVG(ms.score) AS score
+        SELECT m.id AS id, m.title AS title, m.imdbId AS imdbId, AVG(ms.score) AS score
         FROM Movie m 
             LEFT JOIN MovieScore ms ON m.id = ms.movieId
         WHERE m.id = :id

@@ -3,6 +3,10 @@ package pl.byteit.cinemamanager.movie
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.web.bind.annotation.*
+import pl.byteit.cinemamanager.movie.io.MovieDetailsResponse
+import pl.byteit.cinemamanager.movie.io.MovieResponse
+import pl.byteit.cinemamanager.movie.io.MovieScoreRequest
+import pl.byteit.cinemamanager.movie.io.UserMovieScore
 import java.util.*
 
 @RestController
@@ -38,45 +42,3 @@ class MovieController(
     }
 
 }
-
-data class MovieResponse(
-    val id: UUID,
-    val title: String
-) {
-    companion object Factory {
-        fun from(movie: Movie): MovieResponse = MovieResponse(movie.id, movie.title)
-    }
-}
-
-data class MovieDetailsResponse(
-    val id: UUID,
-    val title: String,
-    val score: Double,
-    val details: DetailsDto?
-) {
-    companion object Factory {
-        fun from(movie: MovieWithScore): MovieDetailsResponse = MovieDetailsResponse(
-            movie.getId(),
-            movie.getTitle(),
-            movie.getScore(),
-            null
-        )
-    }
-}
-
-data class DetailsDto(
-    val runtime: String,
-    val releasedDate: String,
-    val imdbRating: String,
-    val description: String
-)
-
-data class MovieScoreRequest(
-    val score: Int
-) {
-    init {
-        require(score in 1..5) { "Score must be between 1 and 5" }
-    }
-}
-
-data class UserMovieScore(val score: Int)

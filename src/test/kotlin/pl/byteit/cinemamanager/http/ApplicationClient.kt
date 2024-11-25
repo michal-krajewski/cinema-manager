@@ -1,10 +1,10 @@
 package pl.byteit.cinemamanager.http
 
 import org.springframework.core.ParameterizedTypeReference
-import pl.byteit.cinemamanager.movie.MovieDetailsResponse
-import pl.byteit.cinemamanager.movie.MovieResponse
-import pl.byteit.cinemamanager.movie.MovieScoreRequest
-import pl.byteit.cinemamanager.movie.UserMovieScore
+import pl.byteit.cinemamanager.movie.io.MovieDetailsResponse
+import pl.byteit.cinemamanager.movie.io.MovieResponse
+import pl.byteit.cinemamanager.movie.io.MovieScoreRequest
+import pl.byteit.cinemamanager.movie.io.UserMovieScore
 import java.util.*
 
 class ApplicationClient(private val httpClient: HttpClient) {
