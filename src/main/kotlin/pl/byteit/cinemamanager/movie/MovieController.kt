@@ -51,12 +51,25 @@ data class MovieResponse(
 data class MovieDetailsResponse(
     val id: UUID,
     val title: String,
-    val score: Double
+    val score: Double,
+    val details: DetailsDto?
 ) {
     companion object Factory {
-        fun from(movie: MovieWithScore): MovieDetailsResponse = MovieDetailsResponse(movie.getId(), movie.getTitle(), movie.getScore())
+        fun from(movie: MovieWithScore): MovieDetailsResponse = MovieDetailsResponse(
+            movie.getId(),
+            movie.getTitle(),
+            movie.getScore(),
+            null
+        )
     }
 }
+
+data class DetailsDto(
+    val runtime: String,
+    val releasedDate: String,
+    val imdbRating: String,
+    val description: String
+)
 
 data class MovieScoreRequest(
     val score: Int
