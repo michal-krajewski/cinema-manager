@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import pl.byteit.cinemamanager.IntegrationTestBase
 import pl.byteit.cinemamanager.TestMovie.FAST_FIVE
@@ -130,7 +129,6 @@ class MovieApiTest : IntegrationTestBase() {
     }
 
     @Test
-    @Disabled("Security config needed")
     fun `Should prevent user from setting ticket price`() {
         assertThatThrownBy { asUser.setTicketPrice(FAST_FIVE.id, BigDecimal("19.99")) }
             .isExactlyInstanceOf(ForbiddenResponseException::class.java)

@@ -1,13 +1,9 @@
 package pl.byteit.cinemamanager.http
 
 import org.springframework.core.ParameterizedTypeReference
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
+import org.springframework.http.*
 import org.springframework.http.HttpMethod.*
-import org.springframework.http.ResponseEntity
 import org.springframework.web.client.RestTemplate
-import java.util.UUID
 
 interface HttpClient {
 
@@ -16,6 +12,12 @@ interface HttpClient {
     fun put(url: String, body: Any) = exchange(url, PUT, object: ParameterizedTypeReference<Unit>(){}, body)
 
     fun delete(url: String) = exchange(url, DELETE, object: ParameterizedTypeReference<Unit>(){}, null)
+
+    fun post(url: String, body: Any) {
+        val httpHeaders = HttpHeaders()
+        httpHeaders.contentType = MediaType.APPLICATION_JSON
+        exchange(url, POST, object: ParameterizedTypeReference<Unit>(){}, body, httpHeaders)
+    }
 
     fun <T> exchange(
         endpoint: String,
@@ -27,7 +29,11 @@ interface HttpClient {
 
 }
 
-class UserAwareHttpClient(private val userId: UUID, private val client: HttpClient) : HttpClient {
+class StatefulHttpClient(
+    private var savedCookie: HttpHeaders = HttpHeaders(),
+    private val client: HttpClient
+) : HttpClient {
+
     override fun <T> exchange(
         endpoint: String,
         method: HttpMethod,
@@ -36,9 +42,14 @@ class UserAwareHttpClient(private val userId: UUID, private val client: HttpClie
         headers: HttpHeaders?
     ): ResponseEntity<T> {
         val initializedHeaders = headers ?: HttpHeaders()
-        initializedHeaders["User-Id"] = listOf(userId.toString())
+        initializedHeaders.addAll(savedCookie)
+        val response = client.exchange(endpoint, method, parameterizedTypeReference, body, initializedHeaders)
 
-        return client.exchange(endpoint, method, parameterizedTypeReference, body, initializedHeaders)
+        response.headers["Set-Cookie"]
+            ?.reduce { cookies, value -> "$cookies; $value" }
+            ?.let { cookies -> savedCookie["Cookie"] = cookies }
+
+        return response
     }
 }
 

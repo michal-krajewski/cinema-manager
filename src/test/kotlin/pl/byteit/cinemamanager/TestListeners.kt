@@ -2,12 +2,16 @@ package pl.byteit.cinemamanager
 
 import org.springframework.context.ApplicationContext
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.TestContext
 import org.springframework.test.context.TestExecutionListener
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.support.TransactionTemplate
 import pl.byteit.cinemamanager.movie.Movie
 import pl.byteit.cinemamanager.movie.MovieRepository
+import pl.byteit.cinemamanager.user.User
+import pl.byteit.cinemamanager.user.UserRepository
+import java.util.*
 import javax.sql.DataSource
 
 class DatabaseCleaner: TestExecutionListener {
@@ -49,4 +53,19 @@ class MovieDatabasePopulator: TestExecutionListener {
         }
     }
 
+}
+
+class UserDatabasePopulator: TestExecutionListener {
+    override fun beforeTestMethod(testContext: TestContext) {
+        val applicationContext = testContext.applicationContext
+        val passwordEncoder = applicationContext.getBean(PasswordEncoder::class.java)
+        val userRepository = applicationContext.getBean(UserRepository::class.java)
+        TestUser.entries.forEach {
+            userRepository.save(User(
+                UUID.randomUUID(),
+                it.name,passwordEncoder.encode(it.password),
+                it.role
+            ))
+        }
+    }
 }

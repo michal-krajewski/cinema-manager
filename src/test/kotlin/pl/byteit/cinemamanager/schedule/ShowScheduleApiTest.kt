@@ -1,15 +1,14 @@
 package pl.byteit.cinemamanager.schedule
 
 import org.assertj.core.api.Assertions.*
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import pl.byteit.cinemamanager.IntegrationTestBase
 import pl.byteit.cinemamanager.TestMovie.FAST_FIVE
 import pl.byteit.cinemamanager.TestUser.ADMIN
 import pl.byteit.cinemamanager.TestUser.USER_1
 import pl.byteit.cinemamanager.common.DateWithZone
-import pl.byteit.cinemamanager.http.NotFoundResponseException
 import pl.byteit.cinemamanager.http.ForbiddenResponseException
+import pl.byteit.cinemamanager.http.NotFoundResponseException
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -69,7 +68,6 @@ class ShowScheduleApiTest: IntegrationTestBase() {
     }
 
     @Test
-    @Disabled("Security settings needed")
     fun `User cannot change movie show`() {
         val asUser = login(USER_1)
 

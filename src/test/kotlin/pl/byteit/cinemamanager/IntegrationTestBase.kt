@@ -14,7 +14,7 @@ import pl.byteit.cinemamanager.http.*
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @TestExecutionListeners(
-    value = [DatabaseCleaner::class, MovieDatabasePopulator::class],
+    value = [DatabaseCleaner::class, MovieDatabasePopulator::class, UserDatabasePopulator::class],
     mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS
 )
 abstract class IntegrationTestBase {
@@ -26,7 +26,8 @@ abstract class IntegrationTestBase {
     private lateinit var objectMapper: ObjectMapper
 
     protected fun login(user: TestUser): ApplicationClient  {
-        val client: HttpClient = UserAwareHttpClient(user.id, RestTemplateHttpClient(restTemplate()))
+        val client: HttpClient = StatefulHttpClient(client = RestTemplateHttpClient(restTemplate()))
+        client.post("/login", """{"username": "${user.name}","password": "${user.password}"}""")
         return ApplicationClient(client)
     }
 
