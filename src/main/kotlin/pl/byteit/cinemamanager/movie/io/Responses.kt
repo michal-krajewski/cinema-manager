@@ -1,5 +1,6 @@
 package pl.byteit.cinemamanager.movie.io
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import pl.byteit.cinemamanager.movie.Movie
 import pl.byteit.cinemamanager.movie.MovieDetails
 import pl.byteit.cinemamanager.omdb.ImdbDetails
@@ -19,7 +20,7 @@ data class MovieDetailsResponse(
     val id: UUID,
     val title: String,
     val score: Double,
-    val ticketPrice: BigDecimal?,
+    @JsonFormat(shape = JsonFormat.Shape.STRING) val ticketPrice: BigDecimal?,
     val details: ImdbDetailsDto?
 ) {
     companion object Factory {
