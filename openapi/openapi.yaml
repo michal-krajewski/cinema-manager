@@ -1,0 +1,322 @@
+openapi: "3.1.0"
+info:
+  title: "CinemaManager API"
+  description: "CinemaManager API"
+  version: "1.0.0"
+servers:
+  - url: "https://CinemaManager"
+paths:
+  /movies/{movieId}:
+    get:
+      summary: "GET movies/{movieId}"
+      operationId: "getMovie"
+      parameters:
+        - name: "movieId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MovieDetailsResponse"
+  /movies/{movieId}/score:
+    get:
+      summary: "GET movies/{movieId}/score"
+      operationId: "getUserScore"
+      parameters:
+        - name: "movieId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserMovieScore"
+    put:
+      summary: "PUT movies/{movieId}/score"
+      operationId: "scoreMovie"
+      parameters:
+        - name: "movieId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MovieScoreRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+  /movies:
+    get:
+      summary: "GET movies"
+      operationId: "getMovies"
+      parameters:
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+        - name: "pageSize"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MovieResponse"
+  /movies/{movieId}/tickets:
+    put:
+      summary: "PUT movies/{movieId}/tickets"
+      operationId: "setTicketPrice"
+      parameters:
+        - name: "movieId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SetTicketPriceRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+  /shows:
+    get:
+      summary: "GET shows"
+      operationId: "getMovieShowsSchedule"
+      parameters:
+        - name: "movieId"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+        - name: "pageSize"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ShowResponse"
+    put:
+      summary: "PUT shows"
+      operationId: "addSchedule"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewShowRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+    delete:
+      summary: "DELETE shows/{showId}"
+      operationId: "removeShowSchedule"
+      parameters:
+        - name: "showId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      responses:
+        "200":
+          description: "OK"
+  /users:
+    post:
+      summary: "POST users"
+      operationId: "createUser"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+  /login:
+    post:
+      summary: "POST login"
+      operationId: "login"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+              description: "User cookie"
+
+
+components:
+  schemas:
+    BigDecimal:
+      type: "object"
+      format: "string"
+    ImdbDetailsDto:
+      type: "object"
+      properties:
+        runtime:
+          type: "string"
+        releasedDate:
+          type: "string"
+        imdbRating:
+          type: "string"
+        description:
+          type: "string"
+    MovieDetailsResponse:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+        title:
+          type: "string"
+        score:
+          type: "number"
+          format: "double"
+        ticketPrice:
+          type: "string"
+          example: "19.99"
+        details:
+          $ref: "#/components/schemas/ImdbDetailsDto"
+      required:
+        - "id"
+        - "title"
+    UserMovieScore:
+      type: "object"
+      properties:
+        score:
+          type: "integer"
+          format: "int32"
+    MovieResponse:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+        title:
+          type: "string"
+      required:
+        - "id"
+        - "title"
+    MovieScoreRequest:
+      type: "object"
+      properties:
+        score:
+          type: "integer"
+          format: "int32"
+    SetTicketPriceRequest:
+      type: "object"
+      properties:
+        ticketPrice:
+          type: "string"
+          example: "19.99"
+      required:
+        - "ticketPrice"
+    ZoneId:
+      type: "object"
+      properties: { }
+    DateWithZone:
+      type: "object"
+      properties:
+        dateTime:
+          type: "string"
+          format: "date-time"
+        timeZone:
+          $ref: "#/components/schemas/ZoneId"
+      required:
+        - "dateTime"
+        - "timeZone"
+    ShowResponse:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+        movieId:
+          type: "string"
+          format: "uuid"
+        showDate:
+          $ref: "#/components/schemas/DateWithZone"
+      required:
+        - "id"
+        - "movieId"
+        - "showDate"
+    NewShowRequest:
+      type: "object"
+      properties:
+        movieId:
+          type: "string"
+          format: "uuid"
+        startTime:
+          $ref: "#/components/schemas/DateWithZone"
+      required:
+        - "movieId"
+        - "startTime"
+    CreateUserRequest:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        password:
+          type: "string"
+      required:
+        - "username"
+        - "password"
+    LoginRequest:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        password:
+          type: "string"
+          format: "password"
+      required:
+        - "username"
+        - "password"
