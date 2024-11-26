@@ -12,9 +12,9 @@ class OmdbClient(
 ) {
     private val log = LoggerFactory.getLogger(OmdbClient::class.java)
 
-    fun fetchMovieDetails(omdbId: String): ImdbDetails? {
-        log.debug("Sending request to omdb API for movie: $omdbId")
-        val response: OmdbResponse? = fetchRequest(omdbId)
+    fun fetchMovieDetails(imdbId: String): ImdbDetails? {
+        log.debug("Sending request to omdb API for movie: $imdbId")
+        val response: OmdbResponse? = fetchRequest(imdbId)
         if (response == null || response.isError()) {
             log.error("Received error response from omdb: ${response?.error}")
             return null
@@ -27,8 +27,8 @@ class OmdbClient(
         )
     }
 
-    private fun fetchRequest(omdbId: String): OmdbResponse? {
-        val responseEntity = httpClient.getForEntity("$rootUrl?apikey=$apiKey&i=$omdbId", OmdbResponse::class.java)
+    private fun fetchRequest(imdbId: String): OmdbResponse? {
+        val responseEntity = httpClient.getForEntity("$rootUrl?apikey=$apiKey&i=$imdbId", OmdbResponse::class.java)
         if (responseEntity.statusCode.isError) {
             log.error("Received response with status code ${responseEntity.statusCode}")
             return null

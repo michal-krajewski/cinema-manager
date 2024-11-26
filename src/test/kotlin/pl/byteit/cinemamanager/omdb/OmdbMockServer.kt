@@ -1,7 +1,8 @@
 package pl.byteit.cinemamanager.omdb
 
 import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 
 class OmdbMockServer {
@@ -31,9 +32,9 @@ class OmdbMockServer {
         return mockServer.port()
     }
 
-    fun mockMovieResponse(omdbId: String) {
+    fun mockMovieResponse(imdbId: String) {
         mockServer.stubFor(
-            get("/?apikey=$apiKey&i=$omdbId")
+            get("/?apikey=$apiKey&i=$imdbId")
                 .willReturn(
                     aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -43,9 +44,9 @@ class OmdbMockServer {
 
     }
 
-    fun mockApiError(omdbId: String) {
+    fun mockApiError(imdbId: String) {
         mockServer.stubFor(
-            get("/?apikey=$apiKey&i=$omdbId")
+            get("/?apikey=$apiKey&i=$imdbId")
                 .willReturn(
                     aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -59,9 +60,9 @@ class OmdbMockServer {
 
     }
 
-    fun mockServiceError(omdbId: String) {
+    fun mockServiceError(imdbId: String) {
         mockServer.stubFor(
-            get("/?apikey=$apiKey&i=$omdbId")
+            get("/?apikey=$apiKey&i=$imdbId")
                 .willReturn(aResponse().withStatus(500))
         )
     }
