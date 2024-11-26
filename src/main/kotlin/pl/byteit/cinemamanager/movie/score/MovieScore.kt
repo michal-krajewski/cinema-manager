@@ -20,4 +20,4 @@ class MovieScore(
 }
 
 @Embeddable
-class MovieScoreId(var userId: UUID, var movieId: UUID) : Serializable
+data class MovieScoreId(var userId: UUID, var movieId: UUID) : Serializable

@@ -10,10 +10,10 @@ import java.util.*
 @Entity
 @Table(name = "users")
 class User(
-    @Id val id: UUID,
+    @Id val id: UUID = UUID.randomUUID(),
     val username: String,
     val encodedPassword: String,
-    @Enumerated(value = STRING) val role: Role
+    @Enumerated(value = STRING) val role: Role = Role.USER
 )
 
 enum class Role {

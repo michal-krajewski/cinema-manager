@@ -12,5 +12,4 @@ class ShowSchedule(
     @Id val id: UUID = UUID.randomUUID(),
     val movieId: UUID,
     val startTime: ZonedDateTime
-    ) {
-}
+)
