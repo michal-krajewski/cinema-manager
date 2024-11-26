@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: pass
+
+omdb-api:
+  url: http://www.omdbapi.com/
+  key: PROVIDE_YOUR_OWN
+

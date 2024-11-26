@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: ./changelog/1-setup-db.sql
+      relativeToChangelogFile: true
+  - include:
+      file: ./changelog/2-insert-movies.sql
+      relativeToChangelogFile: true
