@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   cinema-db:
-    image: postgres:14-alpine
+    image: postgres
     restart: "no"
     container_name: cinema_db
     ports:

@@ -10,7 +10,6 @@ open class TicketPriceService(
     private val repository: TicketPriceRepository,
     private val movieService: MovieService) {
 
-    //TODO: admin only
     @Transactional
     open fun setTicketPrice(movieId: UUID, ticketPrice: BigDecimal) {
         if(!movieService.exists(movieId))
